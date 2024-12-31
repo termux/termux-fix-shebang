@@ -60,8 +60,9 @@ AC_SUBST(termux_app_package)
 AC_SUBST(termux_base_dir)
 AC_SUBST(termux_prefix)
 
-AC_CONFIG_FILES([Makefile])
+AC_CONFIG_FILES([Makefile tests/Makefile])
 
+AC_CONFIG_TESTDIR(tests)
 AM_MISSING_PROG([AUTOM4TE], [autom4te])
 
 AC_OUTPUT

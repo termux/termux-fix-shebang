@@ -1,0 +1,166 @@
+# Process this file with autom4te to create testsuite. -*- Autotest -*-
+
+# Test suite for termux-fix-shebang.
+# Copyright 2024 Termux
+
+# This file is part of termux-tools.
+
+# termux-tools is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3 of the License, or
+# (at your option) any later version.
+
+# termux-tools is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see
+# <http://www.gnu.org/licenses/>.
+
+# Ensure that termux-fix-shebang handles various types of shebangs
+# correctly.
+
+AT_INIT
+AT_TESTED([${abs_top_builddir}/termux-fix-shebang])
+AT_COLOR_TESTS
+
+AT_BANNER([termux-fix-shebang])
+
+AT_SETUP([/bin/sh])
+AT_KEYWORDS([shebang])
+AT_CHECK([cp ${top_srcdir}/tests/shebang/bin.sh .
+TMPDIR=${abs_top_builddir}/tests ${abs_top_builddir}/termux-fix-shebang --quiet bin.sh
+cat bin.sh],
+[0],
+[#!/data/data/com.termux/files/usr/bin/sh
+])
+AT_CLEANUP
+
+AT_SETUP([/usr/bin/bash])
+AT_KEYWORDS([shebang])
+AT_CHECK([cp ${top_srcdir}/tests/shebang/usr_bin.sh .
+TMPDIR=${abs_top_builddir}/tests ${abs_top_builddir}/termux-fix-shebang --quiet usr_bin.sh
+cat usr_bin.sh],
+[0],
+[#!/data/data/com.termux/files/usr/bin/bash
+])
+AT_CLEANUP
+
+AT_SETUP([/usr/bin/gnuplot -p])
+AT_KEYWORDS([shebang])
+AT_CHECK([cp ${top_srcdir}/tests/shebang/with_arg.sh .
+TMPDIR=${abs_top_builddir}/tests ${abs_top_builddir}/termux-fix-shebang --quiet with_arg.sh
+cat with_arg.sh],
+[0],
+[#!/data/data/com.termux/files/usr/bin/gnuplot -p
+])
+AT_CLEANUP
+
+AT_SETUP([/usr/bin/env python3])
+AT_KEYWORDS([shebang])
+AT_CHECK([cp ${top_srcdir}/tests/shebang/usr_bin_env.sh .
+TMPDIR=${abs_top_builddir}/tests ${abs_top_builddir}/termux-fix-shebang --quiet usr_bin_env.sh
+cat usr_bin_env.sh],
+[0],
+[#!/data/data/com.termux/files/usr/bin/env python3
+])
+AT_CLEANUP
+
+AT_SETUP([/system/bin/sh])
+AT_KEYWORDS([shebang])
+AT_CHECK([cp ${top_srcdir}/tests/shebang/system_bin.sh .
+TMPDIR=${abs_top_builddir}/tests ${abs_top_builddir}/termux-fix-shebang --quiet system_bin.sh
+cat system_bin.sh],
+[0],
+[#!/system/bin/sh
+])
+AT_CLEANUP
+
+AT_SETUP([/data/data/com.termux/files/usr/bin/sh])
+AT_KEYWORDS([shebang])
+AT_CHECK([cp ${top_srcdir}/tests/shebang/termux.sh .
+TMPDIR=${abs_top_builddir}/tests ${abs_top_builddir}/termux-fix-shebang --quiet termux.sh
+cat termux.sh],
+[0],
+[#!/data/data/com.termux/files/usr/bin/sh
+])
+AT_CLEANUP
+
+AT_SETUP([ /usr/bin/bash])
+AT_KEYWORDS([shebang])
+AT_CHECK([cp ${top_srcdir}/tests/shebang/with_space.sh .
+TMPDIR=${abs_top_builddir}/tests ${abs_top_builddir}/termux-fix-shebang --quiet with_space.sh
+cat with_space.sh],
+[0],
+[#!/data/data/com.termux/files/usr/bin/bash
+])
+AT_CLEANUP
+
+AT_SETUP([/usr/bin/hyp-hen])
+AT_KEYWORDS([shebang])
+AT_CHECK([cp ${top_srcdir}/tests/shebang/with_hyphen.sh .
+TMPDIR=${abs_top_builddir}/tests ${abs_top_builddir}/termux-fix-shebang --quiet with_hyphen.sh
+cat with_hyphen.sh],
+[0],
+[#!/data/data/com.termux/files/usr/bin/hyp-hen
+])
+AT_CLEANUP
+
+AT_SETUP([/usr/bin/under_score])
+AT_KEYWORDS([shebang])
+AT_CHECK([cp ${top_srcdir}/tests/shebang/with_underscore.sh .
+TMPDIR=${abs_top_builddir}/tests ${abs_top_builddir}/termux-fix-shebang --quiet with_underscore.sh
+cat with_underscore.sh],
+[0],
+[#!/data/data/com.termux/files/usr/bin/under_score
+])
+AT_CLEANUP
+
+AT_SETUP([/usr/bin/plus++])
+AT_KEYWORDS([shebang])
+AT_CHECK([cp ${top_srcdir}/tests/shebang/with_plus.sh .
+TMPDIR=${abs_top_builddir}/tests ${abs_top_builddir}/termux-fix-shebang --quiet with_plus.sh
+cat with_plus.sh],
+[0],
+[#!/data/data/com.termux/files/usr/bin/plus++
+])
+AT_CLEANUP
+
+AT_SETUP([/usr/bin/script])
+AT_KEYWORDS([shebang])
+AT_CHECK([cp ${top_srcdir}/tests/shebang/with_script.sh .
+TMPDIR=${abs_top_builddir}/tests ${abs_top_builddir}/termux-fix-shebang --quiet with_script.sh
+cat with_script.sh],
+[0],
+[#!/data/data/com.termux/files/usr/bin/bash
+# Dummy script
+for i in 0 1 2 3; do
+    echo foo
+    echo bar
+    echo baz
+done
+])
+AT_CLEANUP
+
+AT_SETUP([Symlink to shebang script])
+AT_KEYWORDS([shebang])
+AT_CHECK([cp ${top_srcdir}/tests/shebang/shebang_symlink.sh .
+ln -s shebang_symlink.sh symlink.sh
+TMPDIR=${abs_top_builddir}/tests ${abs_top_builddir}/termux-fix-shebang --quiet symlink.sh
+cat shebang_symlink.sh],
+[0],
+[#!/data/data/com.termux/files/usr/bin/bash
+])
+AT_CLEANUP
+
+AT_SETUP([/usr/../bin/sh])
+AT_KEYWORDS([shebang])
+AT_CHECK([cp ${top_srcdir}/tests/shebang/with_relative_path.sh .
+TMPDIR=${abs_top_builddir}/tests ${abs_top_builddir}/termux-fix-shebang --quiet with_relative_path.sh
+cat with_relative_path.sh],
+[0],
+[#!/data/data/com.termux/files/usr/bin/sh
+])
+AT_CLEANUP

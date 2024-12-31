@@ -16,6 +16,8 @@
 # along with termux-tools.  If not, see
 # <https://www.gnu.org/licenses/>.
 
+SUBDIRS = . tests
+
 AM_CFLAGS = -Wall -Wextra -pedantic
 
 bin_PROGRAMS = termux-fix-shebang
